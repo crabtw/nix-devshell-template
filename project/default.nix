@@ -1,7 +1,11 @@
-{ lib, stdenv, cmake, python3, ninja, rustc, cargo
-, swig4, windows }:
+{ lib, stdenv, cmake, python3, ninja, rust
+, windows }:
 
-stdenv.mkDerivation {
+let
+
+  rustPkgs = rust.packages.stable;
+
+in stdenv.mkDerivation {
   name = "project";
   src = null;
 
@@ -9,9 +13,8 @@ stdenv.mkDerivation {
     cmake
     python3
     ninja
-    rustc
-    cargo
-    swig4
+    rustPkgs.rustc
+    rustPkgs.cargo
   ];
 
   buildInputs = lib.optionals stdenv.hostPlatform.isMinGW [
