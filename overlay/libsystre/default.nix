@@ -17,7 +17,7 @@ in stdenv.mkDerivation {
     autoreconfHook
   ];
 
-  buildInputs = [
+  propagatedBuildInputs = [
     libtre
   ];
 
