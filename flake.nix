@@ -7,35 +7,11 @@
 
     forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
-    overlay = final: prev: {
-      useLldLinker = stdenv:
-      let
-        lld = prev.buildPackages.llvmPackages_16.lld;
-        bintools = stdenv.cc.bintools.override {
-          extraBuildCommands = ''
-            wrap ${stdenv.cc.bintools.targetPrefix}ld.lld ${prev.path}/pkgs/build-support/bintools-wrapper/ld-wrapper.sh ${lld}/bin/ld.lld
-            wrap ${stdenv.cc.bintools.targetPrefix}ld ${prev.path}/pkgs/build-support/bintools-wrapper/ld-wrapper.sh ${lld}/bin/ld.lld
-          '';
-        };
-      in stdenv.override (old: {
-        allowedRequisites = null;
-        cc = stdenv.cc.override { inherit bintools; };
-      });
-
-      mkShell = prev.mkShell.override (old: {
-        stdenv = final.useLldLinker old.stdenv;
-      });
-
-      my-project = prev.callPackage ./project {
-        stdenv = final.useLldLinker prev.stdenv;
-      };
-    };
-
     shells = forAllSystems (system:
     let
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ overlay ];
+        overlays = [ (import ./overlay) ];
       };
 
       pkgsMingw = pkgs.pkgsCross.mingwW64;

@@ -6,7 +6,7 @@ let
   rustPkgs = rust.packages.stable;
 
 in stdenv.mkDerivation {
-  name = "project";
+  name = "my-project";
   src = null;
 
   nativeBuildInputs = [
@@ -19,5 +19,6 @@ in stdenv.mkDerivation {
 
   buildInputs = lib.optionals stdenv.hostPlatform.isMinGW [
     windows.mingw_w64_pthreads
+    windows.libsystre
   ];
 }
