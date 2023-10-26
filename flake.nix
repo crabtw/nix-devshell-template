@@ -22,13 +22,9 @@
         inputsFrom = [ pkgs.my-project ];
       };
 
-      mingw = pkgsMingw.callPackage ({ mkShell, python311, my-project }:
-      let
-        my-project' = my-project.override { python3 = python311; };
-      in mkShell {
+      mingw = pkgsMingw.callPackage ({ mkShell, my-project }: mkShell {
         nativeBuildInputs = [ emulator ];
-
-        inputsFrom = [ my-project' ];
+        inputsFrom = [ my-project ];
       }) {};
     });
   in {
